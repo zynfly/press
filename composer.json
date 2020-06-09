@@ -1,6 +1,7 @@
 {
   "name": "9z/press",
   "description": "玖臻信息技术工作室提供的更安全的WordPress打包",
+  "type": "project",
   "license": "MIT",
   "authors": [
     {
