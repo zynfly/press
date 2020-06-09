@@ -1,0 +1,56 @@
+{
+  "name": "9z/press",
+  "description": "玖臻信息技术工作室提供的更安全的WordPress打包",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "zynfly",
+      "email": "zynfly@9z.work"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "composer/installers": "^1.9",
+    "johnpbloch/wordpress": "^5.4",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/wp-config": "^1.0",
+    "roots/wp-password-bcrypt": "^1.0",
+    "symfony/dotenv": "^5.1",
+    "symfony/http-foundation": "^5.1",
+    "wpackagist-plugin/wordfence": "^7.4",
+    "wpackagist-theme/astra": "^2.4"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "extra": {
+    "installer-paths": {
+      "public/app/mu-plugins/{$name}": [
+        "type:wordpress-muplugin",
+        "wpackagist-plugin/wordfence"
+      ],
+      "public/app/plugins/{$name}": [
+        "type:wordpress-plugin"
+      ],
+      "public/app/themes/{$name}": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "public/core"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
