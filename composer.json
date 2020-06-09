@@ -50,7 +50,7 @@
     "post-root-package-install": [
       "php -r \"copy('.env.example', '.env');\""
     ]
-  }
+  },
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
