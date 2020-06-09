@@ -6,6 +6,6 @@ gen
 
 .env
 composer.lock
-
+vendor
 public/core
 public/wflogs
