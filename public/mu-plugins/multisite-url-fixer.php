@@ -10,13 +10,7 @@
  */
 
 
-add_filter( 'site_url', function ( $url, $path, $scheme, $blog_id ) {
-	if ( 'login' == $scheme || 'login_post' == $scheme ) {
-		$url = str_replace( 'core/wp-', '', $url );
-	}
 
-	return $url;
-}, 10, 4 );
 
 if ( ! defined( 'MULTISITE' ) ) {
 	return;
