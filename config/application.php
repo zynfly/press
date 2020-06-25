@@ -13,42 +13,42 @@ declare( strict_types=1 );
 use Roots\WPConfig\Config;
 
 if ( ! function_exists( 'env' ) ) {
-	/**
-	 * Gets the value of an environment variable.
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 *
-	 * @return mixed
-	 */
-	function env( $key, $default = null ) {
-		$value = $_ENV[ $key ] ?? false;
+    /**
+     * Gets the value of an environment variable.
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    function env( $key, $default = null ) {
+        $value = $_ENV[ $key ] ?? false;
 
-		if ( $value === false ) {
-			return $default;
-		}
+        if ( $value === false ) {
+            return $default;
+        }
 
-		switch ( strtolower( $value ) ) {
-			case 'true':
-			case '(true)':
-				return true;
-			case 'false':
-			case '(false)':
-				return false;
-			case 'empty':
-			case '(empty)':
-				return '';
-			case 'null':
-			case '(null)':
-				return;
-		}
+        switch ( strtolower( $value ) ) {
+            case 'true':
+            case '(true)':
+                return true;
+            case 'false':
+            case '(false)':
+                return false;
+            case 'empty':
+            case '(empty)':
+                return '';
+            case 'null':
+            case '(null)':
+                return;
+        }
 
-		if ( preg_match( '/\A([\'"])(.*)\1\z/', $value, $matches ) ) {
-			return $matches[2];
-		}
+        if ( preg_match( '/\A([\'"])(.*)\1\z/', $value, $matches ) ) {
+            return $matches[2];
+        }
 
-		return $value;
-	}
+        return $value;
+    }
 }
 /**
  * Directory containing all of the site's files
@@ -70,7 +70,7 @@ $webroot_dir = $root_dir . '/public';
  */
 $dotenv = new \Symfony\Component\Dotenv\Dotenv();
 if ( file_exists( $root_dir . '/.env' ) ) {
-	$dotenv->load( $root_dir . '/.env' );
+    $dotenv->load( $root_dir . '/.env' );
 }
 
 /**
@@ -105,12 +105,12 @@ Config::define( 'DB_COLLATE', '' );
 $table_prefix = env( 'DB_PREFIX', 'wp_' );
 
 if ( env( 'DATABASE_URL' ) ) {
-	$dsn = (object) parse_url( env( 'DATABASE_URL' ) );
+    $dsn = (object) parse_url( env( 'DATABASE_URL' ) );
 
-	Config::define( 'DB_NAME', substr( $dsn->path, 1 ) );
-	Config::define( 'DB_USER', $dsn->user );
-	Config::define( 'DB_PASSWORD', isset( $dsn->pass ) ? $dsn->pass : null );
-	Config::define( 'DB_HOST', isset( $dsn->port ) ? "{$dsn->host}:{$dsn->port}" : $dsn->host );
+    Config::define( 'DB_NAME', substr( $dsn->path, 1 ) );
+    Config::define( 'DB_USER', $dsn->user );
+    Config::define( 'DB_PASSWORD', isset( $dsn->pass ) ? $dsn->pass : null );
+    Config::define( 'DB_HOST', isset( $dsn->port ) ? "{$dsn->host}:{$dsn->port}" : $dsn->host );
 }
 
 /**
@@ -148,7 +148,7 @@ ini_set( 'display_errors', '0' );
  * Default Theme
  */
 if ( env( 'WP_DEFAULT_THEME' ) ) {
-	Config::define( 'WP_DEFAULT_THEME', env( 'WP_DEFAULT_THEME' ) );
+    Config::define( 'WP_DEFAULT_THEME', env( 'WP_DEFAULT_THEME' ) );
 }
 
 /**
@@ -160,52 +160,46 @@ Config::define( 'WP_CACHE', env( 'WP_CACHE', true ) );
  * Multisite
  */
 if ( env( 'WP_ALLOW_MULTISITE' ) ) {
-	Config::define( 'WP_ALLOW_MULTISITE', true );
+    Config::define( 'WP_ALLOW_MULTISITE', true );
 }
 if ( env( 'MULTISITE' ) ) {
-	Config::define( 'MULTISITE', env( 'MULTISITE' ) );
+    Config::define( 'MULTISITE', env( 'MULTISITE' ) );
 
-	Config::define( 'DOMAIN_CURRENT_SITE', $_SERVER['HTTP_HOST'] );
-	$multisite_configs = [
-		'SUBDOMAIN_INSTALL',
-		'PATH_CURRENT_SITE',
-		'SITE_ID_CURRENT_SITE',
-		'BLOG_ID_CURRENT_SITE',
-		'NOBLOGREDIRECT'
-	];
-	foreach ( $multisite_configs as $multisite_config ) {
-		if ( env( $multisite_config ) ) {
-			Config::define( $multisite_config, env( $multisite_config ) );
-		}
-	}
-	unset( $multisite_configs );
-	unset( $multisite_config );
+    Config::define( 'DOMAIN_CURRENT_SITE', $_SERVER['HTTP_HOST'] );
+
+    $multisite_configs = [
+        'SUBDOMAIN_INSTALL',
+        'PATH_CURRENT_SITE',
+        'SITE_ID_CURRENT_SITE',
+        'BLOG_ID_CURRENT_SITE',
+        'NOBLOGREDIRECT'
+    ];
+    foreach ( $multisite_configs as $multisite_config ) {
+        if ( env( $multisite_config ) ) {
+            Config::define( $multisite_config, env( $multisite_config ) );
+        }
+    }
+    unset( $multisite_configs );
+    unset( $multisite_config );
 }
 
 /**
  * Cookies
  */
-$cookies_configs = [
-	'COOKIEHASH',
-	'COOKIE_DOMAIN',
-	'ADMIN_COOKIE_PATH',
-	'COOKIEPATH',
-	'SITECOOKIEPATH',
-	'TEST_COOKIE',
-	'AUTH_COOKIE',
-	'USER_COOKIE',
-	'PASS_COOKIE',
-	'SECURE_AUTH_COOKIE',
-	'LOGGED_IN_COOKIE'
-];
-foreach ( $cookies_configs as $cookies_config ) {
-	if ( env( $cookies_config ) ) {
-		Config::define( $cookies_config, env( $cookies_config ) );
-	}
+if ( env( 'COOKIE_DOMAIN' ) ) {
+    Config::define( 'COOKIE_DOMAIN', env( 'COOKIE_DOMAIN' ) );
+    Config::define( 'COOKIEHASH', md5( Config::get( 'COOKIE_DOMAIN' ) ) );
+    Config::define( 'ADMIN_COOKIE_PATH', '/' );
+    Config::define( 'COOKIEPATH', '/' );
+    Config::define( 'SITECOOKIEPATH', '/' );
+    Config::define( 'TEST_COOKIE', env( 'DB_PREFIX' ) . '_test_cookie' );
+    Config::define( 'AUTH_COOKIE', env( 'DB_PREFIX' ) . '_' . Config::get( 'COOKIEHASH' ) );
+    Config::define( 'USER_COOKIE', env( 'DB_PREFIX' ) . '_user_' . Config::get( 'COOKIEHASH' ) );
+    Config::define( 'PASS_COOKIE', env( 'DB_PREFIX' ) . '_pass_' . Config::get( 'COOKIEHASH' ) );
+    Config::define( 'SECURE_AUTH_COOKIE', env( 'DB_PREFIX' ) . '_sec_' . Config::get( 'COOKIEHASH' ) );
+    Config::define( 'LOGGED_IN_COOKIE', env( 'DB_PREFIX' ) . '_logged_in' . Config::get( 'COOKIEHASH' ) );
 }
 
-unset( $cookies_configs );
-unset( $cookies_config );
 
 // Set the trash to less days to optimize WordPress.
 Config::define( 'EMPTY_TRASH_DAYS', env( 'EMPTY_TRASH_DAYS', 7 ) );
@@ -229,13 +223,13 @@ Config::define( 'WP_DISABLE_FATAL_ERROR_HANDLER', env( 'WP_DISABLE_FATAL_ERROR_H
  * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
  */
 if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
-	$_SERVER['HTTPS'] = 'on';
+    $_SERVER['HTTPS'] = 'on';
 }
 
 $env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 
 if ( file_exists( $env_config ) ) {
-	require_once $env_config;
+    require_once $env_config;
 }
 Config::apply();
 
@@ -245,5 +239,5 @@ Config::apply();
  * Bootstrap WordPress
  */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', $webroot_dir . '/core/' );
+    define( 'ABSPATH', $webroot_dir . '/core/' );
 }
